@@ -1,9 +1,7 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(sf::Vector2f bodySize, sf::Vector2f bodyPosition, sf::RenderWindow * window)
+DrawableObject::DrawableObject(sf::Vector2f bodySize, sf::Vector2f bodyPosition)
 {
-	this->window = window;
-
 	this->body.setSize(bodySize);
 
 	this->body.setOrigin(bodySize / 2.0f);
@@ -16,9 +14,9 @@ void DrawableObject::setCoords(sf::Vector2f vector)
 	this->body.setPosition(vector);
 }
 
-void DrawableObject::draw()
+void DrawableObject::draw(sf::RenderWindow* window)
 {
-	this->window->draw(this->body);
+	window->draw(this->body);
 }
 
 void DrawableObject::setPosition(sf::Vector2f position)
@@ -36,7 +34,7 @@ void DrawableObject::setSize(sf::Vector2f size)
 	body.setSize(size);
 }
 
-void DrawableObject::setWindow(sf::RenderWindow * win)
+bool DrawableObject::isActive()
 {
-	this->window = win;
+	return true;
 }

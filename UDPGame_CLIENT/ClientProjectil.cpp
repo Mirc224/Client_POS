@@ -3,7 +3,7 @@
 
 
 ClientProjectil::ClientProjectil()
-	: DrawableObject(sf::Vector2f(12.0f, 12.0f), sf::Vector2f(0.0f, 0.0f), nullptr)
+	: DrawableObject(sf::Vector2f(12.0f, 12.0f), sf::Vector2f(0.0f, 0.0f))
 {
 }
 
@@ -37,6 +37,16 @@ float ClientProjectil::getCordY()
 	return body.getPosition().y;
 }
 
+bool ClientProjectil::isActive()
+{
+	return this->m_projectilStatus == ClientProjectil::Projectil_Status::ACTIVE;
+}
+
+void ClientProjectil::setTexture(sf::Texture * texture)
+{
+	this->body.setTexture(texture);
+}
+
 void ClientProjectil::setProjectilStatus(ClientProjectil::Projectil_Status status)
 {
 	m_projectilStatus = status;
@@ -47,7 +57,7 @@ void ClientProjectil::setProjectilDirection(ClientProjectil::Projectil_Direction
 	m_projectilDirection = direction;
 }
 
-void ClientProjectil::setOwnerSlot(uint16 ownerSlot)
+void ClientProjectil::setOwnerSlot(uint8 ownerSlot)
 {
 	m_playerSlot = ownerSlot;
 }

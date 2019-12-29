@@ -1,0 +1,9 @@
+﻿  main.cpp
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\main.cpp(20): warning C4326: return type of 'main' should be 'int' instead of 'void'
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\main.cpp(22): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+  Generating code
+  1 of 330 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  UDPGame_CLIENT.vcxproj -> C:\Users\Mirko\source\repos\UDPGame_CLIENT\Release\UDPGame_CLIENT.exe

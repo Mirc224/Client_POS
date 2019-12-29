@@ -12,5 +12,9 @@ typedef int bool32;
 typedef float float32;
 typedef double float64;
 
-const uint16 PORT = 49153;
-const uint32 SOCKET_BUFFER_SIZE = 1024;
+const uint16	PORT = 49153;
+const uint32	SOCKET_BUFFER_SIZE = 1024;
+const uint8		MAX_CLIENTS = 4;
+const uint8		MAX_AMMO = 4;
+const uint8		MAX_PROJECTILES = MAX_AMMO + MAX_AMMO / 2;
+const uint8		NUMBER_OF_PROJECTILES = MAX_CLIENTS * MAX_PROJECTILES;

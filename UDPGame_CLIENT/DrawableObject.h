@@ -3,16 +3,15 @@
 class DrawableObject
 {
 public:
-	DrawableObject(sf::Vector2f bodySize, sf::Vector2f bodyPosition, sf::RenderWindow* window);
+	DrawableObject(sf::Vector2f bodySize, sf::Vector2f bodyPosition);
 	void setCoords(sf::Vector2f vector);
-	void draw();
+	void draw(sf::RenderWindow* window);
 	void setPosition(sf::Vector2f position);
 	void setOrigin(sf::Vector2f origin);
 	void setSize(sf::Vector2f size);
-	void setWindow(sf::RenderWindow* win);
+	bool isActive();
 	virtual ~DrawableObject() = default;
 protected:
 	sf::RectangleShape body;
-	sf::RenderWindow* window;
 };
 

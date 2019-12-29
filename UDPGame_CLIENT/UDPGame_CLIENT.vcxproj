@@ -108,6 +108,8 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\Mirko\source\repos\UDPGame_CLIENT\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib</AdditionalDependencies>
+      <HeapReserveSize>50000000</HeapReserveSize>
+      <StackReserveSize>50000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,7 +129,9 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientMap.cpp" />
     <ClCompile Include="ClientProjectil.cpp" />
+    <ClCompile Include="ClientWall.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ClientPlayer.cpp" />
@@ -135,7 +139,9 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientMap.h" />
     <ClInclude Include="ClientProjectil.h" />
+    <ClInclude Include="ClientWall.h" />
     <ClInclude Include="DrawableObject.h" />
     <ClInclude Include="Odin.h" />
     <ClInclude Include="ClientPlayer.h" />

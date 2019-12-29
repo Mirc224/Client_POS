@@ -1,7 +1,7 @@
 #include "ClientPlayer.h"
 
 ClientPlayer::ClientPlayer(sf::Vector2f bodyPosition, sf::RenderWindow * window, std::string texturePath, float switchTime, sf::Vector2u imageCount)
-	: DrawableObject(sf::Vector2f(0.0f, 0.0f), bodyPosition, window)
+	: DrawableObject(sf::Vector2f(0.0f, 0.0f), bodyPosition)
 {
 	texture = new sf::Texture();
 	texture->loadFromFile(texturePath);
@@ -71,6 +71,11 @@ float ClientPlayer::getPlayerCordX()
 float ClientPlayer::getPlayerCordY()
 {
 	return cordY;
+}
+
+bool ClientPlayer::isActive()
+{
+	return this->playerActivity == ClientPlayer::Activity::ACTIVE;
 }
 
 void ClientPlayer::UploadState(int8 * buffer, int32 & bytes_written)

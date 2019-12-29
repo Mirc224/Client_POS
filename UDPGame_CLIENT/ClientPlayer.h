@@ -18,11 +18,15 @@ public:
 	ClientPlayer::Action getPlayerAction();
 	ClientPlayer::Activity getPlayerActivity();
 	uint8 getPlayerAmmo();
+
+
 	void setCordX(float x);
 	void setCordY(float y);
 	void setPlayerActivity(ClientPlayer::Activity activity);
 	float getPlayerCordX();
 	float getPlayerCordY();
+	bool isActive();
+
 	void UploadState(int8* buffer, int32& bytes_written);
 	void InsertState(int8* buffer, int32& bytes_read);
 	void Update(double deltaTime);

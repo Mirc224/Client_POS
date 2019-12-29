@@ -1,25 +1,29 @@
 #include "Client.h"
 
-
-
-
-
 Client::Client(sf::RenderWindow * window)
 	: m_window(window)
 {
+	this->m_clientMap = new ClientMap(window);
 	std::string textures[MAX_CLIENTS] = { "animblack.png", "animgreen.png", "animred.png", "animblue.png" };
+	projectilTexture = new sf::Texture();
+	projectilTexture->loadFromFile("snowball.png");
 	for (uint16 i = 0; i < MAX_PROJECTILES * MAX_CLIENTS; ++i)
 	{
 		projectil_objects[i].setOwnerSlot(i / (MAX_PROJECTILES));
 		projectil_objects[i].setProjectilNumber(i % MAX_PROJECTILES);
 	}
+	
 	for (uint16 i = 0; i < MAX_CLIENTS; ++i)
 	{
-		player_objects[i] = new ClientPlayer(sf::Vector2f(0.0, -200.0 + 70*i), window, textures[i], 0.3, sf::Vector2u(3,9));
+		player_objects[i] = new ClientPlayer(sf::Vector2f(0.0, -200.0 + 70*i), window, textures[i], 0.15, sf::Vector2u(3,9));
+		m_clientMap->setClientPlayer(player_objects[i], i);
+
 	}
+
 	for (uint16 i = 0; i < NUMBER_OF_PROJECTILES; ++i)
 	{
-		projectil_objects[i].setWindow(window);
+		m_clientMap->setClientProjectil(&projectil_objects[i], i);
+		projectil_objects[i].setTexture(projectilTexture);
 	}
 }
 
@@ -62,6 +66,7 @@ bool Client::Init(std::string IPAddress)
 	server_address.sin_addr.S_un.S_un_b.s_b2 = octet[1];
 	server_address.sin_addr.S_un.S_un_b.s_b3 = octet[2];
 	server_address.sin_addr.S_un.S_un_b.s_b4 = octet[3];
+	m_clientMap->loadMap(0);
 	return true;
 }
 
@@ -74,7 +79,7 @@ bool Client::TryToConnect()
 	int to_length = sizeof(server_address);
 	ZeroMemory(buffer, SOCKET_BUFFER_SIZE);
 	buffer[0] = 0;
-	if (sendto(sock, buffer, buffer_length, flags, to, to_length) == SOCKET_ERROR)
+	if (sendto(sock, buffer, 2, flags, to, to_length) == SOCKET_ERROR)
 	{
 		printf("sendto failed: %d\n", WSAGetLastError());
 		return false;
@@ -117,10 +122,12 @@ void Client::Disconnect()
 	int flags = 0;
 	SOCKADDR* to = (SOCKADDR*)&server_address;
 	int to_length = sizeof(server_address);
+	uint32 bytesWirtten = 0;
 	ZeroMemory(buffer, SOCKET_BUFFER_SIZE);
-	buffer[0] = (uint8)Client_Message::Leave;
-	memcpy(&buffer[2], &slot, 2);
-	if (sendto(sock, buffer, buffer_length, flags, to, to_length) == SOCKET_ERROR)
+	buffer[bytesWirtten++] = (uint8)Client_Message::Leave;
+	memcpy(&buffer[bytesWirtten], &slot, sizeof(slot));
+	bytesWirtten += sizeof(slot);
+	if (sendto(sock, buffer, bytesWirtten + 1, flags, to, to_length) == SOCKET_ERROR)
 	{
 		printf("sendto failed: %d\n", WSAGetLastError());
 		return;
@@ -173,20 +180,7 @@ void Client::HandleState(int8 * buffer, int32 & bytes_read)
 
 void Client::Draw()
 {
-	for (uint16 i = 0; i < MAX_CLIENTS; ++i)
-	{
-		if (player_objects[i]->getPlayerActivity() == ClientPlayer::Activity::ACTIVE)
-		{
-			player_objects[i]->draw();
-			for (uint16 playerProjectil = 0; playerProjectil < MAX_PROJECTILES; ++playerProjectil)
-			{
-				ClientProjectil& tmpProjectil = projectil_objects[i * MAX_PROJECTILES + playerProjectil];
-				if (tmpProjectil.getProjectilStatus() == ClientProjectil::Projectil_Status::ACTIVE)
-					tmpProjectil.draw();
-
-			}
-		}
-	}
+	m_clientMap->draw(m_window);
 }
 
 void Client::ReadInput()
@@ -223,7 +217,7 @@ void Client::Update(double deltaTime)
 {
 	for (uint16 i = 0; i < MAX_CLIENTS; ++i)
 	{
-		if (player_objects[i]->getPlayerActivity() == ClientPlayer::Activity::ACTIVE )
+		if (player_objects[i]->isActive())
 		{
 			if (time_since_heard_from_player[i] >= CLIENT_TIMEOUT)
 			{
@@ -265,62 +259,6 @@ void Client::Run()
 	else
 	{
 		printf("Connection failed.\n");
-		return;
-	}
-	
-	//Sleep(2000);
-	//Disconnect();
-	/*
-	std::thread listenThread(&Client::Listen, this);
-	bool32 is_running = 1;
-	std::thread listenThread(&Client::Listen, this);
-	while (is_running)
-	{
-		ZeroMemory(buffer, SOCKET_BUFFER_SIZE);
-		buffer[0] = (uint8)Client_Message::Input;
-		// get input
-		scanf_s("\n%s", &buffer[1], SOCKET_BUFFER_SIZE);
-		// send to server
-		Send();
-		// wait for reply
-		/*
-		flags = 0;
-		SOCKADDR_IN from;
-		int from_size = sizeof(from);
-		int bytes_received = recvfrom(sock, buffer, SOCKET_BUFFER_SIZE, flags, (SOCKADDR*)&from, &from_size);
-
-		if (bytes_received == SOCKET_ERROR)
-		{
-			printf("recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError());
-			break;
-		}
-
-		// grab data from packet
-		int32 read_index = 0;
-
-		memcpy(&player_x, &buffer[read_index], sizeof(player_x));
-		read_index += sizeof(player_x);
-
-		memcpy(&player_y, &buffer[read_index], sizeof(player_y));
-		read_index += sizeof(player_y);
-
-		memcpy(&is_running, &buffer[read_index], sizeof(is_running));
-
-		printf("x:%d, y:%d, is_running:%d\n", player_x, player_y, is_running);
-	}
-	listenThread.join();
-	*/
-}
-
-void Client::Send()
-{
-	int buffer_length = SOCKET_BUFFER_SIZE;
-	int flags = 0;
-	SOCKADDR* to = (SOCKADDR*)&server_address;
-	int to_length = sizeof(server_address);
-	if (sendto(sock, buffer, buffer_length, flags, to, to_length) == SOCKET_ERROR)
-	{
-		printf("sendto failed: %d", WSAGetLastError());
 		return;
 	}
 }
@@ -370,4 +308,6 @@ Client::~Client()
 	{
 		delete player_objects[i];
 	}
+	delete m_clientMap;
+	delete projectilTexture;
 }

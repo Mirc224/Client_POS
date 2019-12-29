@@ -1,4 +1,9 @@
-﻿  main.cpp
-c:\users\mirko\source\repos\udpgame_client\udpgame_client\main.cpp(18): warning C4326: return type of 'main' should be 'int' instead of 'void'
-c:\users\mirko\source\repos\udpgame_client\udpgame_client\main.cpp(20): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+﻿  Client.cpp
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(18): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(18): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(228): warning C4244: '+=': conversion from 'double' to 'float32', possible loss of data
   UDPGame_CLIENT.vcxproj -> C:\Users\Mirko\source\repos\UDPGame_CLIENT\Debug\UDPGame_CLIENT.exe

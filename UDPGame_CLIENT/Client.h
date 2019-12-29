@@ -8,13 +8,10 @@
 #include <thread>
 #include "ClientPlayer.h"
 #include "ClientProjectil.h"
+#include "ClientMap.h"
 #include <mutex>
 #pragma comment (lib, "ws2_32.lib")
-const uint16	MAX_CLIENTS = 4;
-const uint16	MAX_AMMO = 4;
-const uint16	MAX_PROJECTILES = MAX_AMMO + MAX_AMMO / 2;
 const float32	CLIENT_TIMEOUT = 3.0f;
-const uint16	NUMBER_OF_PROJECTILES = MAX_CLIENTS * MAX_PROJECTILES;
 
 enum class Client_Message : uint8 {
 	Join,
@@ -52,7 +49,6 @@ public:
 	Client(sf::RenderWindow* window);
 	bool Init(std::string IPAddress = "127.0.0.1");
 	void Run();
-	void Send();
 	void Listen();
 	void ParseBuffer(int8* buffer);
 	bool TryToConnect();
@@ -75,10 +71,10 @@ private:
 	uint16 slot;
 	ClientPlayer* player_objects[MAX_CLIENTS];
 	ClientProjectil projectil_objects[MAX_CLIENTS * MAX_PROJECTILES];
+	ClientMap* m_clientMap;
 	bool isRunning = true;
 	bool isConnected = false;
+	sf::Texture* projectilTexture;
 	float32 heard_from_server;
-
-
 };
 

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
 #include "ClientPlayer.h"
 #include "ClientWall.h"
 #include "ClientProjectil.h"
@@ -24,5 +25,6 @@ private:
 	ClientProjectil* m_projectil[NUMBER_OF_PROJECTILES];
 	sf::RectangleShape m_backgroundImage;
 	sf::Texture* m_backgroundTexture = nullptr;
+	std::map<std::string, sf::Texture*> m_textures;
 };
 

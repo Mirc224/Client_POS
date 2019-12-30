@@ -1,9 +1,12 @@
 #pragma once
+#include <iostream>
 #include "DrawableObject.h"
-class ClientWall 
+class ClientWall : public DrawableObject
 {
 public:
-	ClientWall();
+	ClientWall(sf::Vector2f bodysize, sf::Vector2f bodyPosition, sf::Texture* texture = nullptr);
 	virtual ~ClientWall();
+private:
+	sf::Texture* m_texture;
 };
 

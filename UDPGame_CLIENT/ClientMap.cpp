@@ -8,6 +8,9 @@ ClientMap::ClientMap(sf::RenderWindow* window)
 	m_backgroundImage.setSize(bgSize);
 	m_backgroundImage.setOrigin(bgSize / 2.0f);
 	m_backgroundTexture = new sf::Texture();
+	sf::Texture* tmpTexture = new sf::Texture();
+	tmpTexture->loadFromFile("tree.png");
+	m_textures.insert(std::pair<std::string, sf::Texture*>("tree", tmpTexture));
 }
 
 void ClientMap::loadMap(uint16 mapNumber)
@@ -18,18 +21,21 @@ void ClientMap::loadMap(uint16 mapNumber)
 		m_mapObjects[i] = nullptr;
 	}
 	m_mapObjects.clear();
-
+	
+	ClientWall* tmpDrawable = nullptr;
 	std::string mapPath = "map" + std::to_string(mapNumber) + ".txt";
 	std::ifstream mapfile(mapPath);
 	std::string backgroundTexture;
 	std::getline(mapfile, backgroundTexture);
 	m_backgroundTexture->loadFromFile(backgroundTexture);
 	m_backgroundImage.setTexture(m_backgroundTexture);
+
 	int objType;
 	float width = 0;
 	float heigth = 0;
 	float cordX = 0;
 	float cordY = 0;
+	std::string textureType;
 	while (mapfile >> objType)
 	{
 		switch ((MapObjectType)objType)
@@ -39,6 +45,8 @@ void ClientMap::loadMap(uint16 mapNumber)
 			mapfile >> heigth;
 			mapfile >> cordX;
 			mapfile >> cordY;
+			mapfile >> textureType;
+			m_mapObjects.push_back(new ClientWall(sf::Vector2f(width, heigth), sf::Vector2f(cordX, cordY), m_textures[textureType]));
 		default:
 			break;
 
@@ -113,4 +121,7 @@ ClientMap::~ClientMap()
 	}
 	for (int i = 0; i < m_mapObjects.size(); ++i)
 		delete m_mapObjects[i];
+	for (auto element : m_textures) {
+		delete element.second;
+	}
 }

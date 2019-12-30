@@ -1,1 +1,2 @@
 snowbg.png
+0 130 200 150 100 tree

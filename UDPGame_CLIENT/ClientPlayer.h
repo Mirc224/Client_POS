@@ -12,7 +12,7 @@ public:
 	enum Direction : uint8 { DOWN, UP, LEFT, RIGHT };
 	enum Action : uint8 { IDLE, MOVE, KILLED = 8 };
 	enum Activity: uint8 { ACTIVE, DISABLED};
-	ClientPlayer(sf::Vector2f bodyPosition, sf::RenderWindow* window, std::string texturePath,float switchTime, sf::Vector2u imageCount);
+	ClientPlayer(sf::Vector2f bodyPosition, std::string texturePath,float switchTime, sf::Vector2u imageCount);
 	ClientPlayer::Status getPlayerStatus();
 	ClientPlayer::Direction getPlayerDirection();
 	ClientPlayer::Action getPlayerAction();

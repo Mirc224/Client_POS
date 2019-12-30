@@ -1,6 +1,6 @@
 #include "ClientPlayer.h"
 
-ClientPlayer::ClientPlayer(sf::Vector2f bodyPosition, sf::RenderWindow * window, std::string texturePath, float switchTime, sf::Vector2u imageCount)
+ClientPlayer::ClientPlayer(sf::Vector2f bodyPosition, std::string texturePath, float switchTime, sf::Vector2u imageCount)
 	: DrawableObject(sf::Vector2f(0.0f, 0.0f), bodyPosition)
 {
 	texture = new sf::Texture();

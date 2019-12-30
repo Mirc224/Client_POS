@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientBar.cpp" />
     <ClCompile Include="ClientMap.cpp" />
     <ClCompile Include="ClientProjectil.cpp" />
     <ClCompile Include="ClientWall.cpp" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientBar.h" />
     <ClInclude Include="ClientMap.h" />
     <ClInclude Include="ClientProjectil.h" />
     <ClInclude Include="ClientWall.h" />

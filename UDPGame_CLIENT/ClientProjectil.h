@@ -25,6 +25,7 @@ public:
 	void setProjectilNumber(uint8 projectilNum);
 	void setCordX(float x);
 	void setCordY(float y);
+	void setAllProjectilData(uint8 status, uint8 direction, float cordX, float cordY);
 
 
 	void UploadState(int8* buffer, int32& bytes_written);

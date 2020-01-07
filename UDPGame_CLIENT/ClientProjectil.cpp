@@ -77,6 +77,13 @@ void ClientProjectil::setCordY(float y)
 	body.setPosition(body.getPosition().x, y);
 }
 
+void ClientProjectil::setAllProjectilData(uint8 status, uint8 direction, float cordX, float cordY)
+{
+	this->m_projectilStatus = (ClientProjectil::Projectil_Status) status;
+	this->m_projectilDirection = (ClientProjectil::Projectil_Direction) direction;
+	body.setPosition(cordX, cordY);
+}
+
 void ClientProjectil::UploadState(int8 * buffer, int32 & bytes_written)
 {
 	memcpy(&buffer[bytes_written], &m_playerSlot, sizeof(m_playerSlot));

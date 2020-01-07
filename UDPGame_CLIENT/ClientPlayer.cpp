@@ -63,6 +63,37 @@ void ClientPlayer::setPlayerActivity(ClientPlayer::Activity activity)
 	this->playerActivity = activity;
 }
 
+void ClientPlayer::setPlayerStatus(ClientPlayer::Status status)
+{
+	this->playerStatus = status;
+}
+
+void ClientPlayer::setPlayerAction(ClientPlayer::Action action)
+{
+	this->playerAction = action;
+}
+
+void ClientPlayer::setPlayerDirection(ClientPlayer::Direction direction)
+{
+	this->playerDirection = direction;
+}
+
+void ClientPlayer::setPlayerAmmo(uint8 ammo)
+{
+	this->ammo = ammo;
+}
+
+void ClientPlayer::setAllPlayerData(uint8 status, uint8 direction, uint8 action, uint8 ammo, float cordX, float cordY)
+{
+	this->playerStatus = (ClientPlayer::Status) status;
+	this->playerDirection = (ClientPlayer::Direction) direction;
+	this->playerAction = (ClientPlayer::Action) action;
+	this->ammo = ammo;
+	this->cordX = cordX;
+	this->cordY = cordY;
+	this->playerActivity = ClientPlayer::Activity::ACTIVE;
+}
+
 float ClientPlayer::getPlayerCordX()
 {
 	return cordX;
@@ -113,7 +144,6 @@ void ClientPlayer::Update(double deltaTime)
 	this->animation->Update(vyslednaAnimacia, deltaTime, faceRight);
 	this->body.setTextureRect(animation->uvRect);
 	this->body.setPosition(cordX, cordY);
-
 }
 
 

@@ -7,5 +7,5 @@ c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(18): warnin
 c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(18): warning C4305: 'argument': truncation from 'double' to 'float'
 c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(83): warning C4267: 'initializing': conversion from 'size_t' to 'uint16', possible loss of data
 c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(151): warning C4101: 'client_message': unreferenced local variable
-c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(302): warning C4244: '+=': conversion from 'double' to 'float32', possible loss of data
+c:\users\mirko\source\repos\udpgame_client\udpgame_client\client.cpp(333): warning C4244: '+=': conversion from 'double' to 'float32', possible loss of data
   UDPGame_CLIENT.vcxproj -> C:\Users\Mirko\source\repos\UDPGame_CLIENT\Debug\UDPGame_CLIENT.exe

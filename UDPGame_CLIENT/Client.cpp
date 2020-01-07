@@ -182,45 +182,45 @@ void Client::Disconnect()
 
 void Client::HandleState(int8 * buffer, int32 & bytes_read)
 {
-	uint16 number_of_objects;
-	uint16 player_slot;
-	uint8 projectil_number;
-	Game_Object_Type game_object_type;
-	// Disable projectiles
-	for (uint16 player_i = 0; player_i < MAX_CLIENTS; ++player_i)
+	this->m_object_data_mutex.lock();
+	memcpy(&this->m_numberOfUpdatedObjects, &buffer[bytes_read], sizeof(this->m_numberOfUpdatedObjects));
+	bytes_read += sizeof(this->m_numberOfUpdatedObjects);
+	for (uint16 i = 0; i < this->m_numberOfUpdatedObjects; ++i)
 	{
-		if (player_objects[player_i]->getPlayerActivity() == ClientPlayer::Activity::ACTIVE)
-		{
-			for (uint16 projectil_i = 0; projectil_i < MAX_PROJECTILES; ++projectil_i)
-			{
-				projectil_objects[player_i * MAX_PROJECTILES + projectil_i].setProjectilStatus(ClientProjectil::Projectil_Status::DISABLED);
-			}
-		}
-	}
-	memcpy(&number_of_objects, &buffer[bytes_read], sizeof(number_of_objects));
-	bytes_read += sizeof(number_of_objects);
-	for (uint16 i = 0; i < number_of_objects; ++i)
-	{
-		game_object_type = (Game_Object_Type)buffer[bytes_read++];
-		switch (game_object_type)
+		updatedGameStates[i].objectType = (Game_Object_Type)buffer[bytes_read++];
+
+		switch (updatedGameStates[i].objectType)
 		{
 		case Game_Object_Type::Player:
-			memcpy(&player_slot, &buffer[bytes_read], sizeof(player_slot));
-			bytes_read += sizeof(player_slot);
-			player_objects[player_slot]->InsertState(buffer, bytes_read);
-			time_since_heard_from_player[player_slot] = 0.0f;
+			memcpy(&updatedGameStates[i].playerSlot, &buffer[bytes_read], sizeof(updatedGameStates[i].playerSlot));
+			bytes_read += sizeof(updatedGameStates[i].playerSlot);
+			updatedGameStates[i].status = buffer[bytes_read++];
+			updatedGameStates[i].direction = buffer[bytes_read++];
+			updatedGameStates[i].action = buffer[bytes_read++];
+			updatedGameStates[i].ammo = buffer[bytes_read++];
+			memcpy(&updatedGameStates[i].cordX, &buffer[bytes_read], sizeof(updatedGameStates[i].cordX));
+			bytes_read += sizeof(updatedGameStates[i].cordX);
+			memcpy(&updatedGameStates[i].cordY, &buffer[bytes_read],sizeof(updatedGameStates[i].cordY));
+			bytes_read += sizeof(updatedGameStates[i].cordY);
+			time_since_heard_from_player[updatedGameStates[i].playerSlot] = 0.0f;
 			break;
 		case Game_Object_Type::Projectil:
-			memcpy(&player_slot, &buffer[bytes_read], sizeof(player_slot));
-			bytes_read += sizeof(player_slot);
-			projectil_number = buffer[bytes_read++];
-			projectil_objects[player_slot * MAX_PROJECTILES + projectil_number].InsertState(buffer, bytes_read);
-			//printf("Slot %d  projectil number %d\n", player_slot, projectil_number);
+			memcpy(&updatedGameStates[i].playerSlot, &buffer[bytes_read], sizeof(updatedGameStates[i].playerSlot));
+			bytes_read += sizeof(updatedGameStates[i].playerSlot);
+			updatedGameStates[i].projectilNumber = buffer[bytes_read++];
+			updatedGameStates[i].status = buffer[bytes_read++];
+			updatedGameStates[i].direction = buffer[bytes_read++];
+			memcpy(&updatedGameStates[i].cordX, &buffer[bytes_read], sizeof(updatedGameStates[i].cordX));
+			bytes_read += sizeof(updatedGameStates[i].cordX);
+			memcpy(&updatedGameStates[i].cordY, &buffer[bytes_read], sizeof(updatedGameStates[i].cordY));
+			bytes_read += sizeof(updatedGameStates[i].cordY);
+
 			break;
 		default:
 			break;
 		}
 	}
+	this->m_object_data_mutex.unlock();
 }
 
 void Client::HandleGameStats(int8 * buffer, int32 & bytes_read)
@@ -289,6 +289,37 @@ void Client::ReadInput()
 
 void Client::Update(double deltaTime)
 {
+
+	for (uint16 player_i = 0; player_i < MAX_CLIENTS; ++player_i)
+	{
+		if (player_objects[player_i]->getPlayerActivity() == ClientPlayer::Activity::ACTIVE)
+		{
+			for (uint16 projectil_i = 0; projectil_i < MAX_PROJECTILES; ++projectil_i)
+			{
+				projectil_objects[player_i * MAX_PROJECTILES + projectil_i].setProjectilStatus(ClientProjectil::Projectil_Status::DISABLED);
+			}
+		}
+	}
+	this->m_object_data_mutex.lock();
+	for (uint16 object_i = 0; object_i < this->m_numberOfUpdatedObjects; ++object_i)
+	{
+		switch (this->updatedGameStates[object_i].objectType)
+		{
+		case Game_Object_Type::Player:
+			this->player_objects[updatedGameStates[object_i].playerSlot]->setAllPlayerData(this->updatedGameStates[object_i].status, this->updatedGameStates[object_i].direction, this->updatedGameStates[object_i].action,
+				this->updatedGameStates[object_i].ammo, this->updatedGameStates[object_i].cordX, this->updatedGameStates[object_i].cordY);
+			break;
+		case Game_Object_Type::Projectil:
+			this->projectil_objects[this->updatedGameStates[object_i].playerSlot * MAX_PROJECTILES + this->updatedGameStates[object_i].projectilNumber].setAllProjectilData(
+				this->updatedGameStates[object_i].status, this->updatedGameStates[object_i].direction, this->updatedGameStates[object_i].cordX, this->updatedGameStates[object_i].cordY);
+			break;
+		default:
+			break;
+		}
+	}
+	this->m_numberOfUpdatedObjects = 0;
+	this->m_object_data_mutex.unlock();
+
 	for (uint16 i = 0; i < MAX_CLIENTS; ++i)
 	{
 		if (player_objects[i]->isActive())

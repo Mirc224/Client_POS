@@ -23,9 +23,16 @@ public:
 	void setCordX(float x);
 	void setCordY(float y);
 	void setPlayerActivity(ClientPlayer::Activity activity);
+	void setPlayerStatus(ClientPlayer::Status status);
+	void setPlayerAction(ClientPlayer::Action action);
+	void setPlayerDirection(ClientPlayer::Direction direction);
+	void setPlayerAmmo(uint8 ammo);
+	void setAllPlayerData(uint8 status, uint8 direction, uint8 action, uint8 ammo, float cordX, float cordY);
 	float getPlayerCordX();
 	float getPlayerCordY();
 	bool isActive();
+
+
 
 	void UploadState(int8* buffer, int32& bytes_written);
 	void InsertState(int8* buffer, int32& bytes_read);

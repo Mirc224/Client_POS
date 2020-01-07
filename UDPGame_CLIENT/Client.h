@@ -46,6 +46,19 @@ enum class Player_Input : uint8
 	FIRE = 16
 };
 
+struct Updated_Game_Object
+{
+	Game_Object_Type objectType;
+	uint16 playerSlot;
+	uint16 projectilNumber;
+	uint8 status;
+	uint8 direction;
+	uint8 action;
+	uint8 ammo;
+	float cordX;
+	float cordY;
+};
+
 class Client
 {
 public:
@@ -74,6 +87,7 @@ private:
 	int8 buffer[SOCKET_BUFFER_SIZE];
 	int8 listenBuffer[SOCKET_BUFFER_SIZE];
 	float32 time_since_heard_from_player[MAX_CLIENTS];
+	Updated_Game_Object updatedGameStates[MAX_CLIENTS + NUMBER_OF_PROJECTILES];
 	uint16 slot;
 	ClientPlayer* player_objects[MAX_CLIENTS];
 	ClientProjectil projectil_objects[MAX_CLIENTS * MAX_PROJECTILES];
@@ -84,5 +98,7 @@ private:
 	float32 heard_from_server;
 	sf::Texture* projectilTexture;
 	std::string m_playerName = "Player";
+	uint16 m_numberOfUpdatedObjects;
+	std::mutex m_object_data_mutex;
 };
 
